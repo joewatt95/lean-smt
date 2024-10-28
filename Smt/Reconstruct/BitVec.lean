@@ -51,7 +51,7 @@ partial def synthDecidableInst (t : cvc5.Term) : ReconstructM Expr := do match t
       let w : Nat := t[0]!.getSort.getBitVectorSize.val
       let x : Q(BitVec $w) ← reconstructTerm t[0]!
       let i : Nat := t.getOp[0]!.getIntegerValue.toNat
-      return q(instDecidableEqBool («$x».getLsb $i) true)
+      return q(instDecidableEqBool («$x».getLsbD $i) true)
     | _ =>
       let p : Q(Prop) ← reconstructTerm t
       Meta.synthInstance q(Decidable $p)
@@ -229,7 +229,7 @@ where
     let w : Nat := t[0]!.getSort.getBitVectorSize.val
     let x : Q(BitVec $w) ← reconstructTerm t[0]!
     let i : Nat := t.getOp[0]!.getIntegerValue.toNat
-    return q(«$x».getLsb $i = true)
+    return q(«$x».getLsbD $i = true)
   | _ => return none
 where
   leftAssocOp (op : Expr) (t : cvc5.Term) : ReconstructM Expr := do
@@ -274,7 +274,7 @@ def reconstructRewrite (pf : cvc5.Proof) : ReconstructM (Option Expr) := do
       let h : Q(decide (BitVec.beq $x $y) = decide $p) ← Meta.mkFreshExprMVar q(decide (BitVec.beq $x $y) = @decide $p $hp)
       let mv ← Bool.boolify h.mvarId!
       let ds := [``BitVec.beq, ``BitVec.beq.go]
-      let ts := [``BitVec.getLsb_cons, ``Nat.succ.injEq]
+      let ts := [/- ``BitVec.getLsb_cons, -/ ``Nat.succ.injEq]
       let ps := [``Nat.reduceAdd, ``Nat.reduceSub, ``Nat.reduceEqDiff, ``reduceIte]
       let simpTheorems ← ds.foldrM (fun n a => a.addDeclToUnfold n) {}
       let simpTheorems ← ts.foldrM (fun n a => a.addConst n) simpTheorems
@@ -290,7 +290,7 @@ def reconstructRewrite (pf : cvc5.Proof) : ReconstructM (Option Expr) := do
       let h : Q((BitVec.adc' $x $y false).snd = $z) ← Meta.mkFreshExprMVar q((BitVec.adc' $x $y false).snd = $z)
       let mv ← Bool.boolify h.mvarId!
       let ds := [``BitVec.adc', ``BitVec.adcb', ``BitVec.iunfoldr, ``Fin.hIterate, ``Fin.hIterateFrom]
-      let ts := [``BitVec.getLsb_cons, ``Nat.succ.injEq]
+      let ts := [/- ``BitVec.getLsb_cons, -/ ``Nat.succ.injEq]
       let ps := [``Nat.reduceAdd, ``Nat.reduceLT, ``reduceDIte, ``reduceIte]
       let simpTheorems ← ds.foldrM (fun n a => a.addDeclToUnfold n) {}
       let simpTheorems ← ts.foldrM (fun n a => a.addConst n) simpTheorems
