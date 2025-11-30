@@ -6,7 +6,7 @@ require auto from
   git "https://github.com/leanprover-community/lean-auto.git" @ "v4.25.2-hammer"
 
 require cvc5 from
-  git "https://github.com/abdoo8080/lean-cvc5.git" @ "20a6b2f"
+  git "https://github.com/dranov/lean-cvc5.git" @ "73a5b3c778d2f406158caaa6f4ba4fafe8a06a38"
 
 require mathlib from
   git "https://github.com/leanprover-community/mathlib4.git" @ "v4.25.2"
